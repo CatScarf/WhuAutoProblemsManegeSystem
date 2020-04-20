@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="description" content="">
+		<meta name="author" content="">
+
+		<title>修改问题</title>
+		<!-- Bootstrap 核心 CSS -->
+		<link th:href="@{~/asserts/css/bootstrap.min.css}" rel="stylesheet" type="text/css" >
+		<!-- 自定义 CSS -->
+		<link th:href="@{~/asserts/css/dashboard.css}" rel="stylesheet" type="text/css" >
+		<link th:herf="@{~/asserts/css/my.css}" rel="stylesheet" type="text/css">
+		<link th:herf="@{~/asserts/css/bootstrapValidator.css}" rel="stylesheet" type="text/css"/>
+	</head>
+
+	<body>
+	<!--引入顶栏-->
+	<!--模板名，会使用Thymeleaf的前后缀配置规则进行解析-->
+	<div th:replace="~{commens/bar::topbar}"></div>
+
+		<div class="container-fluid">
+			<div class="row">
+				<main role="main" class="col-md-12 ml-sm-auto col-lg-12 pt-3 px-4">
+					<!--执行非空检查-->
+					<form th:action="@{/question}" method="post" onsubmit="return validate_form(this)">
+						<input type="hidden" name="_method" value="put">
+						<div class="form-group">
+							<label>所属问题id*</label>
+							<input name='problemid' type="number" class="form-control" placeholder="此处填写所属问题id" th:value="${question.problemid}">
+						</div>
+						<div class="form-group">
+							<label>题型id*</label>
+							<input name='typeid' type="number" class="form-control" placeholder="此处填写问题类型id" th:value="${question.typeid}">
+						</div>
+						<div class="form-group">
+							<label>问题*</label>
+							<input name='text' type="text" class="form-control" placeholder="我此处填写问题" th:value="${question.text}">
+						</div>
+						<div class="form-group">
+							<label>答案</label>
+							<input name='answer' type="text" class="form-control" placeholder="此处填写答案(非必填)" th:value="${question.answer}">
+						</div>
+						<div class="form-group">
+							<label>选项数量(非选择题无需填写)</label>
+							<!--js控制div显示隐藏-->
+							<input id="options" name="options" type="number" class="form-control" oninput="myFunction()" placeholder="0" min="0" max="7" th:value="${question.options}">
+						</div>
+						<div class="form-group" id="a" style="display:none">
+							<label>选项A</label>
+							<input name="optiona" type="text" class="form-control" th:value="${question.optiona}">
+						</div>
+						<div class="form-group" id="b" style="display:none">
+							<label>选项B</label>
+							<input name="optionb" type="text" class="form-control" th:value="${question.optionb}">
+						</div>
+						<div class="form-group" id="c" style="display:none">
+							<label>选项C</label>
+							<input name="optionc" type="text" class="form-control" th:value="${question.optionc}">
+						</div>
+						<div class="form-group" id="d" style="display:none">
+							<label>选项D</label>
+							<input name="optiond" type="text" class="form-control" th:value="${question.optiond}">
+						</div>
+						<div class="form-group" id="e" style="display:none">
+							<label>选项E</label>
+							<input name="optione" type="text" class="form-control" th:value="${question.optione}">
+						</div>
+						<div class="form-group" id="f" style="display:none">
+							<label>选项F</label>
+							<input name="optionf" type="text" class="form-control" th:value="${question.optionf}">
+						</div>
+						<div class="form-group" id="g" style="display:none">
+							<label>选项G</label>
+							<input name="optiong" type="text" class="form-control" th:value="${question.optiong}">
+						</div>
+						<div class="form-group" id="id" style="display:none">
+							<label>id(隐藏的)</label>
+							<input name="id" type="text" class="form-control" th:value="${question.id}">
+						</div>
+						<button type="submit" name="submit" class="btn btn-primary">修改问题</button>
+					</form>
+				</main>
+			</div>
+		</div>
+
+		<!-- Placed at the end of the document so the pages load faster -->
+		<script type="text/javascript" th:src="@{~/asserts/js/jquery-3.5.0.js}"></script>
+		<!--表单验证功能-->
+		<script type="text/javascript" th:src="@{~/asserts/js/bootstrapValidator.js}"></script>
+		<script type="text/javascript" src="asserts/js/popper.min.js" th:src="@{~/asserts/js/popper.min.js}"></script>
+		<script type="text/javascript" src="asserts/js/bootstrap.min.js" th:src="@{~/asserts/js/bootstrap.min.js}"></script>
+
+		<!-- Icons -->
+		<script type="text/javascript" src="asserts/js/feather.min.js" th:src="@{~/asserts/js/feather.min.js}"></script>
+		<script>
+			feather.replace()
+		</script>
+
+		<script type="text/javascript">
+			$(".deleteBtn").click(function(){
+				//删除当前题目
+				$("#deleteEmpForm").attr("action",$(this).attr("delete_uri")).submit();
+				return false;
+			});
+		</script>
+
+
+		<script type="text/javascript">
+
+		function validate_required(field, alerttxt) {
+		  with (field) {
+			if (value == null || value == "") { alert(alerttxt); return false }
+			else { return true }
+		  }
+		}
+
+		function validate_form(thisform) {
+		  with (thisform) {
+			if (validate_required(problemid, "必须填写所属问题!") == false) { problemid.focus(); return false }
+			if (validate_required(typeid, "必须填写问题类型!") == false) { typeid.focus(); return false }
+			if (validate_required(text, "必须填写问题!") == false) { text.focus(); return false }
+		  }
+		}
+	  </script>
+
+	<script>
+	function myFunction() {
+		var options=document.getElementById("options").value;
+		var n = Number(options);
+		if(n < 1){
+		  document.getElementById("a").style.display="none";
+		}else{
+		  document.getElementById("a").style.display="";
+		}
+
+		if(n < 2){
+		  document.getElementById("b").style.display="none";
+		}else{
+		  document.getElementById("b").style.display="";
+		}
+
+		if(n < 3){
+		  document.getElementById("c").style.display="none";
+		}else{
+		  document.getElementById("c").style.display="";
+		}
+
+		if(n < 4){
+		  document.getElementById("d").style.display="none";
+		}else{
+		  document.getElementById("d").style.display="";
+		}
+
+		if(n < 5){
+		  document.getElementById("e").style.display="none";
+		}else{
+		  document.getElementById("e").style.display="";
+		}
+
+		if(n < 6){
+		  document.getElementById("f").style.display="none";
+		}else{
+		  document.getElementById("f").style.display="";
+		}
+
+		if(n < 7){
+		  document.getElementById("g").style.display="none";
+		}else{
+		  document.getElementById("g").style.display="";
+		}
+	}
+	</script>
+	</body>
+
+</html>

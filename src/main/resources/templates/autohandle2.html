@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="description" content="">
+		<meta name="author" content="">
+
+		<title>精细处理</title>
+		<!-- Bootstrap 核心 CSS -->
+		<link href="asserts/css/bootstrap.min.css" th:href="@{~/asserts/css/bootstrap.min.css}" rel="stylesheet" type="text/css" >
+		<!-- 自定义 CSS -->
+		<link href="asserts/css/dashboard.css" th:href="@{~/asserts/css/dashboard.css}" rel="stylesheet" type="text/css" >
+		<link href="/asserts/css/my.css" th:herf="@{~/asserts/css/my.css}" rel="stylesheet" type="text/css">
+	</head>
+
+	<body>
+	<!--引入顶栏-->
+	<!--模板名，会使用Thymeleaf的前后缀配置规则进行解析-->
+	<div th:replace="~{commens/bar::topbar}"></div>
+
+		<div class="container-fluid">
+			<div class="row">
+				<main role="auto" class="col-md-12 ml-sm-auto col-lg-12 pt-3 px-4">
+					<p>提示：此页面可以编辑</p>
+					<div th:if="${fileName}">
+						<p th:text="${fileName} + '上传成功！'"> </p>
+					</div>
+					<div class="table-responsive">
+						<table style="float:right">
+							<tbody>
+								<tr>
+									<td>
+										<button type="submit" name="submit" class="btn btn-primary" onclick="setAll()">批量设置科目和题型</button>
+									</td>
+									<td>
+										<select class="form-control" id="all_type" style="min-width:100px;">
+											<option th:selected="${type.id eq 2}"  th:each="type:${types}" th:text="${type.type}" th:value="${type.id}"></option>
+										</select>
+									</td>
+									<td>
+										<select class="form-control" id="all_subject" style="min-width:120px;">
+											<option th:selected="${subject.id eq 1}"  th:each="subject:${subjects}" th:text="${subject.subject}" th:value="${subject.id}"></option>
+										</select>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<form th:action="@{/autohandle2}" method="post">
+							<table class="table table-striped table-sm">
+								<thead>
+								<tr>
+									<th>问题</th>
+									<th>题型</th>
+									<th>科目</th>
+								</tr>
+								</thead>
+								<tbody>
+								<!--
+                                    th:each属性用于迭代循环，语法：th:each="obj,itemStat:${objList}"
+                                    迭代对象可以是Java.util.List,java.util.Map,数组等;
+                                    itemStat称作状态变量，属性有：
+                                    index:    当前迭代对象的index（从0开始计算）
+                                    count:    当前迭代对象的index(从1开始计算)
+                                    size:     被迭代对象的大小
+                                    current:  当前迭代变量
+                                    even/odd: 布尔值，当前循环是否是偶数/奇数（从0开始计算）
+                                    first:    布尔值，当前循环是否是第一个
+                                    last:     布尔值，当前循环是否是最后一个
+                                -->
+								<tr th:each="p,pStat:${questions}">
+									<td>
+										<!--用div模拟input，然后将input和div绑定-->
+										<div contenteditable=true class="myinput" th:text="${p}" th:attr="inputid=${pStat.index}" tabindex="1" style="-webkit-user-select;white-space:pre-wrap;"></div>
+									</td>
+									<!--隐藏的input，通过js和上面的div绑定-->
+									<input th:id="${pStat.index}" th:name="${pStat.index}" th:value="${p}" style="display:none">
+									<td>
+										<div class="form-group">
+											<!--提交的是科目的id-->
+											<select class="form-control type_selector" th:name="'typeid' + ${pStat.index}" style="min-width:100px;">
+												<option th:selected="${type.id eq 2}"  th:each="type:${types}" th:text="${type.type}" th:value="${type.id}"></option>
+											</select>
+										</div>
+									</td>
+									<td>
+										<div class="form-group">
+											<!--提交的是科目的id-->
+											<select class="form-control subject_selector" th:name="'subjectid' + ${pStat.index}" style="min-width:120px;">
+												<option th:selected="${subject.id eq 1}"  th:each="subject:${subjects}" th:text="${subject.subject}" th:value="${subject.id}"></option>
+											</select>
+										</div>
+									</td>
+								</tr>
+								</tbody>
+							</table>
+							<input type="text" name="path" th:value="${path}" style="display:none">
+							<button type="submit" name="submit" class="btn btn-primary">全部录入</button>
+						</form>
+					</div>
+				</main>
+			</div>
+		</div>
+	</div>
+
+		<!-- Bootstrap core JavaScript
+    ================================================== -->
+		<!-- Placed at the end of the document so the pages load faster -->
+		<script type="text/javascript" th:src="@{~/asserts/js/jquery-3.5.0.js}"></script>
+		<script type="text/javascript" th:src="@{~/asserts/js/popper.min.js}"></script>
+		<script type="text/javascript" th:src="@{~/asserts/js/bootstrap.min.js}"></script>
+
+		<!-- Icons -->
+		<script type="text/javascript" src="asserts/js/feather.min.js" th:src="@{~/asserts/js/feather.min.js}"></script>
+		<script>
+			feather.replace()
+		</script>
+		<!--div变更时自动填入input-->
+		<script>
+			$(".myinput").blur(function(){
+				var inputid = $(this).attr('inputid').toString();
+				//console.log(inputid);
+				document.getElementById(inputid).value = $(this).text();
+			})
+		</script>
+		<script>
+			function setAll(){
+				var typeid = document.getElementById("all_type").value;
+				var subjectid = document.getElementById("all_subject").value;
+				$(".type_selector").val(typeid);
+				$(".subject_selector").val(subjectid);
+			}
+		</script>
+
+		<script>
+			$(".myinput").keydown(function(event){
+				// 阻止默认切换元素的行为
+				if(event.keyCode==9){
+					if (event && event.preventDefault) {
+					  event.preventDefault()
+					} else {
+					  window.event.returnValue = false
+					}
+					//获取光标的range对象 event.view 是一个window对象
+					let range = event.view.getSelection().getRangeAt(0);
+					//光标的偏移位置
+					let offset = range.startOffset;
+					//四个 表示四个空格
+					var node = document.createTextNode("\t");
+					//创建一个新的range对象
+					let newrange = document.createRange();
+					// 置新的range的位置，也是插入元素的位置
+					newrange.setStart(range.startContainer, offset);
+					newrange.setEnd(range.startContainer, offset);
+					newrange.collapse(true);
+					newrange.insertNode(node);
+					//去掉旧的range对象，用新的range对象替换
+					event.view.getSelection().removeAllRanges();
+					event.view.getSelection().addRange(newrange);
+					//光标向后移动
+					newrange.setStart(node, 1);
+					newrange.setEnd(node, 1);
+					return false;
+				}else{
+					return true;
+				}
+			});
+		</script>
+
+	</body>
+</html>

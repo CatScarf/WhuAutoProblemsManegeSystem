@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" >
+    <title>Bar</title>
+</head>
+<body>
+
+<!--顶栏-->
+<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0" th:fragment="topbar">
+    <div class="navbar-brand col-sm-3 col-md-2 mr-0">[[${session.loginUser}]]</div>
+    <ul class="navbar-nav px-3">
+        <li class="nav-item text-nowrap" style="float: left; list-style-type:none;">
+            <a class="nav-link" th:class="${activeUri == 'auto' ? 'nav-link active' : 'nav-link'}" th:href="@{/auto}">
+                自动提取
+            </a>
+        </li>
+    </ul>
+    <ul class="navbar-nav px-3">
+        <li class="nav-item text-nowrap" style="float: left; list-style-type:none;">
+            <a class="nav-link" th:class="${activeUri == 'allproblems' ? 'nav-link active' : 'nav-link'}" th:href="@{/problems}">
+                所有题目
+            </a>
+        </li>
+    </ul>
+    <ul class="navbar-nav px-3">
+        <li class="nav-item" style="float: left; list-style-type:none;">
+            <a class="nav-link" th:class="${activeUri == 'allquestions' ? 'nav-link active' : 'nav-link'}" href="#" th:href="@{/questions}">
+                所有问题
+            </a>
+        </li>
+    </ul>
+    <ul class="navbar-nav px-3">
+        <li class="nav-item" style="float: left; list-style-type:none;">
+            <a class="nav-link" th:class="${activeUri == 'allsubjects' ? 'nav-link active' : 'nav-link'}"
+               href="#" th:href="@{/subjects}">
+                所有科目
+            </a>
+        </li>
+    </ul>
+    <ul class="navbar-nav px-3">
+        <li class="nav-item" style="float: left; list-style-type:none;">
+            <a class="nav-link" th:class="${activeUri == 'alltypes' ? 'nav-link active' : 'nav-link'}"
+               href="#" th:href="@{/types}">
+                所有题型
+            </a>
+        </li>
+    </ul>
+
+    <input class="form-control form-control-dark w-25" type="text" placeholder="搜索" aria-label=搜索>
+
+    <ul class="navbar-nav px-3">
+        <li class="nav-item text-nowrap" style="float: left; list-style-type:none;">
+            <form th:action="@{/logout}" method="post" class="nav-link">
+                <input  id="logout" type="submit" value="注销" style="background-color:transparent;border:0;color:white"/>
+            </form>
+        </li>
+    </ul>
+</nav>
+</body>
+</html>

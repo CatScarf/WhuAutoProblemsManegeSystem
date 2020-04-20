@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="description" content="">
+		<meta name="author" content="">
+
+		<title>初步处理</title>
+		<!-- Bootstrap 核心 CSS -->
+		<link href="asserts/css/bootstrap.min.css" th:href="@{~/asserts/css/bootstrap.min.css}" rel="stylesheet" type="text/css" >
+		<!-- 自定义 CSS -->
+		<link href="asserts/css/dashboard.css" th:href="@{~/asserts/css/dashboard.css}" rel="stylesheet" type="text/css" >
+		<link href="/asserts/css/my.css" th:herf="@{~/asserts/css/my.css}" rel="stylesheet" type="text/css">
+	</head>
+
+	<body onmousedown="mousedown()" onmouseup="mouseup()">
+	<!--引入顶栏-->
+	<!--模板名，会使用Thymeleaf的前后缀配置规则进行解析-->
+	<div th:replace="~{commens/bar::topbar}"></div>
+
+		<div class="container-fluid">
+			<div class="row">
+
+			<main role="auto" class="col-md-12 ml-sm-auto col-lg-12 pt-3 px-4">
+				<p>提示：按住鼠标并划过按钮可以批量操作</p>
+				<div th:if="${fileName}">
+					<p th:text="${fileName} + ' 上传成功！目录为：' + ${path}"> </p>
+				</div>
+				<div class="table-responsive">
+					<form th:action="@{/autohandle1}" method="post">
+						<table class="table table-striped table-sm">
+							<thead>
+							<tr>
+								<th>段落</th>
+								<th>首行</th>
+								<th>删除</th>
+							</tr>
+							</thead>
+							<tbody>
+							<!--
+								th:each属性用于迭代循环，语法：th:each="obj,itemStat:${objList}"
+								迭代对象可以是Java.util.List,java.util.Map,数组等;
+								itemStat称作状态变量，属性有：
+								index:    当前迭代对象的index（从0开始计算）
+								count:    当前迭代对象的index(从1开始计算)
+								size:     被迭代对象的大小
+								current:  当前迭代变量
+								even/odd: 布尔值，当前循环是否是偶数/奇数（从0开始计算）
+								first:    布尔值，当前循环是否是第一个
+								last:     布尔值，当前循环是否是最后一个
+							-->
+							<tr th:each="p,pStat:${text}">
+								<td th:text="${p}" style="white-space:pre-wrap;"></td>
+								<td>
+									<div class="switch-wrap">
+										<span>
+											<input type="checkbox" th:name="${pStat.index}" style="display:none">
+										</span>
+									</div>
+								</td>
+								<td>
+									<div class="switch-wrap_d">
+										<span>
+											<input type="checkbox" th:name="'-' + ${pStat.index}" style="display:none">
+										</span>
+									</div>
+								</td>
+							</tr>
+							</tbody>
+						</table>
+						<input type="text" name="path" th:value="${path}" style="display:none">
+						<button type="submit" name="submit" class="btn btn-primary">进一步处理</button>
+					</form>
+				</div>
+			</main>
+
+		</div>
+	</div>
+
+		<!-- Bootstrap core JavaScript
+    ================================================== -->
+		<!-- Placed at the end of the document so the pages load faster -->
+		<script type="text/javascript" th:src="@{~/asserts/js/jquery-3.5.0.js}"></script>
+		<script type="text/javascript" th:src="@{~/asserts/js/popper.min.js}"></script>
+		<script type="text/javascript" th:src="@{~/asserts/js/bootstrap.min.js}"></script>
+
+		<!-- Icons -->
+		<script type="text/javascript" src="asserts/js/feather.min.js" th:src="@{~/asserts/js/feather.min.js}"></script>
+		<script>
+			feather.replace()
+		</script>
+		<script>
+			var mdown = false;
+
+			function mousedown() {
+				mdown = true;
+			}
+
+			function mouseup() {
+				mdown = false
+			}
+
+			$(".switch-wrap").click(function(){
+				if($(this).hasClass("active")){
+					$(this).removeClass("active");
+					$(this).children().first().children().first().removeAttr("checked");
+				}else{
+					$(this).addClass("active");
+					$(this).children().first().children().first().attr("checked","checked");
+
+					$(this).parent().next().children().first().removeClass("active");
+					$(this).parent().next().children().children().first().first().children().first().removeAttr("checked");
+
+					$(this).parent().parent().children().first().css({"color":"","text-decoration":""});
+				}
+			})
+
+			$(".switch-wrap").mouseleave(function(){
+				if(mdown == true){
+					if($(this).hasClass("active")){
+						$(this).removeClass("active");
+						$(this).children().first().children().first().removeAttr("checked");
+					}else{
+						$(this).addClass("active");
+						$(this).children().first().children().first().attr("checked","checked");
+
+						$(this).parent().next().children().first().removeClass("active");
+						$(this).parent().next().children().children().first().first().children().first().removeAttr("checked");
+
+						$(this).parent().parent().children().first().css({"color":"","text-decoration":""});
+					}
+				}
+			})
+
+
+			$(".switch-wrap_d").click(function(){
+				if($(this).hasClass("active")){
+					$(this).removeClass("active");
+					$(this).children().first().children().first().removeAttr("checked");
+
+					$(this).parent().parent().children().first().css({"color":"","text-decoration":""});
+				}else{
+					$(this).addClass("active");
+					$(this).children().first().children().first().attr("checked","checked");
+
+					$(this).parent().prev().children().first().removeClass("active");
+					$(this).parent().prev().children().first().children().first().children().first().removeAttr("checked");
+
+					$(this).parent().parent().children().first().css({"color":"#d8d8d8","text-decoration":"line-through"});
+				}
+			})
+
+			$(".switch-wrap_d").mouseleave(function(){
+				if(mdown == true){
+					if($(this).hasClass("active")){
+						$(this).removeClass("active");
+						$(this).children().first().children().first().removeAttr("checked");
+
+						$(this).parent().parent().children().first().css({"color":"","text-decoration":""});
+					}else{
+						$(this).addClass("active");
+						$(this).children().first().children().first().attr("checked","checked");
+
+						$(this).parent().prev().children().first().removeClass("active");
+						$(this).parent().prev().children().first().children().first().children().first().removeAttr("checked");
+
+						$(this).parent().parent().children().first().css({"color":"#d8d8d8","text-decoration":"line-through"});
+					}
+				}
+			})
+		</script>
+	</body>
+</html>

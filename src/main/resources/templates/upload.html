@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="description" content="">
+		<meta name="author" content="">
+
+		<title>上传文件</title>
+		<!-- Bootstrap 核心 CSS -->
+		<link href="asserts/css/bootstrap.min.css" th:href="@{~/asserts/css/bootstrap.min.css}" rel="stylesheet" type="text/css" >
+		<!-- 自定义 CSS -->
+		<link href="asserts/css/dashboard.css" th:href="@{~/asserts/css/dashboard.css}" rel="stylesheet" type="text/css" >
+		<link href="/asserts/css/my.css" th:herf="@{~/asserts/css/my.css}" rel="stylesheet" type="text/css">
+	</head>
+
+	<body>
+	<!--引入顶栏-->
+	<!--模板名，会使用Thymeleaf的前后缀配置规则进行解析-->
+	<div th:replace="~{commens/bar::topbar}"></div>
+
+		<div class="container-fluid">
+			<div class="row">
+
+			<main role="auto" class="col-md-12 ml-sm-auto col-lg-12 pt-3 px-4">
+				<h1 style="text-align:center">欢迎使用wapms自动试题提取功能</h1>
+				<p style="text-align:center">请上传Work文档，仅支持.docx 或 .doc 格式</p>
+				<form style="text-align:center" action="/upload" method="POST" enctype="multipart/form-data" onsubmit="return validate_form(this)">
+					<input type="file" name="file" ><br>
+					<input type="submit" value="上传">
+				</form>
+			</main>
+
+		</div>
+	</div>
+
+		<!-- Bootstrap core JavaScript
+    ================================================== -->
+		<!-- Placed at the end of the document so the pages load faster -->
+		<script type="text/javascript" th:src="@{~/asserts/js/jquery-3.5.0.js}"></script>
+		<script type="text/javascript" th:src="@{~/asserts/js/popper.min.js}"></script>
+		<script type="text/javascript" th:src="@{~/asserts/js/bootstrap.min.js}"></script>
+
+		<!-- Icons -->
+		<script type="text/javascript" src="asserts/js/feather.min.js" th:src="@{~/asserts/js/feather.min.js}"></script>
+		<script>
+			feather.replace()
+		</script>
+
+	<script type="text/javascript">
+		function validate_form(thisform) {
+			var file = thisform.file.value;
+			if (file == null||file == ""){
+				 alert("请选择要上传的 .docx 或 .doc 文档！");
+				 return false;
+			}
+			if (file.lastIndexOf('.')==-1){ //如果不存在"."
+				alert("文件格式不正确！");
+				return false;
+			}
+			var pos = file.lastIndexOf(".");
+			var suffix = file.substring(pos, file.length);
+			if (suffix.toLowerCase()!=".docx" && suffix.toLowerCase()!=".doc" ) {
+				  alert("文件类型错误！您上传的文件类型为 "+suffix+"， 请上传 .docx 或 .doc 文档。");
+				  return false;
+			}
+			return true;
+		}
+	  </script>
+	</body>
+
+</html>

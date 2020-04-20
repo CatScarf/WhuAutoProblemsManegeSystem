@@ -1,0 +1,29 @@
+spring:
+  profiles:
+    include:
+      sql #这个配置包含sql服务器的地址、账号和密码
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+      enabled: true
+      file-size-threshold: 0
+      location: "/files"
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    initialization-mode: always
+    hikari:
+      max-lifetime: 1200000
+  jpa:
+    hibernate:
+      #更新或者创建数据表结构
+      ddl-auto: update
+      #控制台显示sql
+    show-sql: true
+
+server:
+  port: 8080

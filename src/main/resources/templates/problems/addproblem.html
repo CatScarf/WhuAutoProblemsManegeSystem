@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="description" content="">
+		<meta name="author" content="">
+
+		<title>添加题目</title>
+		<!-- Bootstrap 核心 CSS -->
+		<link th:href="@{~/asserts/css/bootstrap.min.css}" rel="stylesheet" type="text/css" >
+		<!-- 自定义 CSS -->
+		<link th:href="@{~/asserts/css/dashboard.css}" rel="stylesheet" type="text/css" >
+		<link th:herf="@{~/asserts/css/my.css}" rel="stylesheet" type="text/css">
+		<link th:herf="@{~/asserts/css/bootstrapValidator.css}" rel="stylesheet" type="text/css"/>
+	</head>
+
+	<body>
+	<!--引入顶栏-->
+	<!--模板名，会使用Thymeleaf的前后缀配置规则进行解析-->
+	<div th:replace="~{commens/bar::topbar}"></div>
+
+		<div class="container-fluid">
+			<div class="row">
+				<main role="main" class="col-md-12 ml-sm-auto col-lg-12 pt-3 px-4">
+					<!--执行非空检查-->
+					<form th:action="@{/problem}" method="post" onsubmit="return validate_form(this)">
+						<div class="form-group">
+							<label>id（建议自动获取）</label>
+							<input name='id' type="number" class="form-control" placeholder="可自动获取，无需填写" value=null>
+						</div>
+						<div class="form-group">
+							<label>所属科目id*</label>
+							<input name='subjectid' type="number" class="form-control" placeholder="此处填写所属科目id" value=null>
+						</div>
+						<div class="form-group">
+							<label>题目内容</label>
+							<input name='text' type="text" class="form-control" placeholder="我此处填写题目内容">
+						</div>
+						<button type="submit" name="submit" class="btn btn-primary">添加题目</button>
+					</form>
+				</main>
+			</div>
+		</div>
+
+		<!-- Placed at the end of the document so the pages load faster -->
+		<script type="text/javascript" th:src="@{~/asserts/js/jquery-3.5.0.js}"></script>
+		<!--表单验证功能-->
+		<script type="text/javascript" th:src="@{~/asserts/js/bootstrapValidator.js}"></script>
+		<script type="text/javascript" src="asserts/js/popper.min.js" th:src="@{~/asserts/js/popper.min.js}"></script>
+		<script type="text/javascript" src="asserts/js/bootstrap.min.js" th:src="@{~/asserts/js/bootstrap.min.js}"></script>
+
+		<!-- Icons -->
+		<script type="text/javascript" src="asserts/js/feather.min.js" th:src="@{~/asserts/js/feather.min.js}"></script>
+		<script>
+			feather.replace()
+		</script>
+
+		<script type="text/javascript">
+			$(".deleteBtn").click(function(){
+				//删除当前题目
+				$("#deleteEmpForm").attr("action",$(this).attr("delete_uri")).submit();
+				return false;
+			});
+		</script>
+
+
+		<script type="text/javascript">
+
+		function validate_required(field, alerttxt) {
+		  with (field) {
+			if (value == null || value == "") { alert(alerttxt); return false }
+			else { return true }
+		  }
+		}
+
+		function validate_form(thisform) {
+		  with (thisform) {
+			if (validate_required(subjectid, "必须填写所属科目!") == false) { subjectid.focus(); return false }
+		  }
+		}
+	  </script>
+	</body>
+
+</html>

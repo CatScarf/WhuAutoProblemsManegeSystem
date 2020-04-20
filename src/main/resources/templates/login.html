@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <title>试题自动管理系统-登陆</title>
+        <!-- Bootstrap 核心 CSS -->
+        <link href="asserts/css/bootstrap.min.css" th:href="@{/asserts/css/bootstrap.min.css}" rel="stylesheet">
+        <!-- 自定义 CSS -->
+        <link href="asserts/css/signin.css" th:href="@{/asserts/css/signin.css}" rel="stylesheet">
+    </head>
+
+    <body class="text-center">
+        <div class="jumbotron">
+            <div class="middle">
+                <h1 class="form_signin">WHU Auto Problems Manage System</h1>
+                <h3>WAPMS试题自动管理系统</h3>
+                <!--只要post请求发送到/login就可以接入Spring Security了-->
+                <form class="form-signin" action="dashboard.html" th:action="@{/LoginProcess}" method="post">
+                    <p style="color:red" th:text="${msg}" th:if="${not #strings.isEmpty(msg)}"></p>
+                    <label class="sr-only">用户名</label>
+                    <input type="text" name="username" class="form-control" th:placeholder="用户名" required="" autofocus="">
+                    <label class="sr-only" th:text="#{login.password}">密码</label>
+                    <input type="password" name="password" class="form-control" th:placeholder="密码" required="">
+                    <div class="checkbox mb-3">
+                        <label>
+                            <input type="checkbox" name="remember-me" value="true" checked="checked"> 记住我
+                        </label>
+                    </div>
+                    <button class="btn btn-lg btn-primary btn-block" type="submit" >登陆</button>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>
+
