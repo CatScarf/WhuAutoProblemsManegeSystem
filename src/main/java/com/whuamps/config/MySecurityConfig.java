@@ -28,7 +28,8 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter{
                 .antMatchers("/","/problems","/questions","/subjects","/types",
                         "/problem","/question","/subject","type",
                         "/problem/**","/question/**","/subject/**","/type/**",
-                        "/auto","/upload","/autohandle","/autohandle1","/autohandle2"
+                        "/auto","/upload","/autohandle","/autohandle1","/autohandle2",
+                        "/train"
                         ).hasRole("USER");
         //开启自动配置的登陆功能
         http.formLogin().usernameParameter("username")

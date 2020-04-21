@@ -15,7 +15,8 @@
 		<link href="/asserts/css/my.css" th:herf="@{~/asserts/css/my.css}" rel="stylesheet" type="text/css">
 	</head>
 
-	<body onmousedown="mousedown()" onmouseup="mouseup()">
+	<!--鼠标按住时可以快速选择-->
+	<body onmousedown="mousedown()" onmouseup="mouseup()" onmouseleave="mouseup()">
 	<!--引入顶栏-->
 	<!--模板名，会使用Thymeleaf的前后缀配置规则进行解析-->
 	<div th:replace="~{commens/bar::topbar}"></div>
@@ -51,19 +52,19 @@
 								first:    布尔值，当前循环是否是第一个
 								last:     布尔值，当前循环是否是最后一个
 							-->
-							<tr th:each="p,pStat:${text}">
-								<td th:text="${p}" style="white-space:pre-wrap;"></td>
+							<tr th:each="p,pStat:${TextAndInfos}">
+								<td th:text="${p.text}" style="white-space:pre-wrap;" th:style="${p.isDeleted?'color:#d8d8d8;text-decoration:line-through;white-space:pre-wrap;':'white-space:pre-wrap;'}"></td>
 								<td>
-									<div class="switch-wrap">
+									<div class="switch-wrap" th:class="${p.isHead?'switch-wrap active':'switch-wrap'}">
 										<span>
-											<input type="checkbox" th:name="${pStat.index}" style="display:none">
+											<input type="checkbox" th:name="${pStat.index}" th:checked="${p.isHead?true:false}" style="display:none">
 										</span>
 									</div>
 								</td>
 								<td>
-									<div class="switch-wrap_d">
+									<div class="switch-wrap_d" th:class="${p.isDeleted?'switch-wrap_d active':'switch-wrap_d'}">
 										<span>
-											<input type="checkbox" th:name="'-' + ${pStat.index}" style="display:none">
+											<input type="checkbox" th:name="'-' + ${pStat.index}" th:checked="${p.isDeleted?true:false}" style="display:none">
 										</span>
 									</div>
 								</td>

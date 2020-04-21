@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.whuapms</groupId>
 	<artifactId>whuapms</artifactId>
-	<version>0.2.1</version>
+	<version>0.3.0</version>
 	<name>whu-auto-problems-manage-system</name>
 	<description>WHU Auto Problems Manage System</description>
 
@@ -94,6 +94,22 @@
 			<artifactId>commons-io</artifactId>
 			<version>2.6</version>
 		</dependency>
+
+		<dependency>
+			<groupId>nz.ac.waikato.cms.weka</groupId>
+			<artifactId>weka-stable</artifactId>
+			<version>3.8.1</version>
+		</dependency>
+
+		<!--Lombok项目是一个Java库，它会自动插入编辑器和构建工具中
+		Lombok提供了一组有用的注释，用来消除Java类中的大量样板代码
+		仅五个字符(@Data)就可以替换数百行代码从而产生干净，简洁且易于维护的Java类-->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+
 
 		<dependency>
 			<groupId>com.alibaba</groupId>

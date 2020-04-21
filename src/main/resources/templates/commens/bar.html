@@ -46,7 +46,14 @@
             </a>
         </li>
     </ul>
-
+    <ul class="navbar-nav px-3">
+        <li class="nav-item" style="float: left; list-style-type:none;">
+            <a class="nav-link" th:class="${activeUri == 'train' ? 'nav-link active' : 'nav-link'}"
+               href="#" th:href="@{/train}">
+                AI训练
+            </a>
+        </li>
+    </ul>
     <input class="form-control form-control-dark w-25" type="text" placeholder="搜索" aria-label=搜索>
 
     <ul class="navbar-nav px-3">

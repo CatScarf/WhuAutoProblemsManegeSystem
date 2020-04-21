@@ -1,9 +1,6 @@
 package com.whuamps.controller;
 
-import com.whuamps.entity.Problem;
-import com.whuamps.entity.Question;
-import com.whuamps.entity.Subject;
-import com.whuamps.entity.Type;
+import com.whuamps.entity.*;
 import com.whuamps.repository.ProblemRepository;
 import com.whuamps.repository.QuestionRepository;
 import com.whuamps.repository.SubjectRepository;
@@ -37,6 +34,11 @@ public class AutoController {
     ProblemRepository problemRepository;
     @Autowired
     QuestionRepository questionRepository;
+
+    @GetMapping({"/upload","/autohandle1","autohandel2"})
+    public String back(){
+        return "redirect:/auto";
+    }
 
     //自动提取试题-上传页面
     @GetMapping({"/auto","/"})
@@ -75,9 +77,33 @@ public class AutoController {
 
             String[] text = buffer.split("\n");
 
+            //把文件名称和路径放入Model
             model.addAttribute("fileName", fileName);
             model.addAttribute("path", destFile);
-            model.addAttribute("text", text);
+
+            //机器学习
+            Boolean[] isDeleted = new Boolean[text.length]; //是否删除
+            Boolean[] isHead = new Boolean[text.length]; //是否为首行
+            Arrays.fill(isDeleted, false);
+            Arrays.fill(isHead, false);
+
+            //判断是否删除
+            for(int i = 0; i < text.length; i++){
+                if(text[i].isBlank()){
+                    isDeleted[i] = true;
+                }
+            }
+
+
+            //把问题放入Model
+            List<TextAndInfo> textAndInfos = new ArrayList<>();
+            for(int i = 0; i < text.length ; i++){
+                textAndInfos.add(new TextAndInfo(text[i],isDeleted[i],isHead[i]));
+            }
+
+
+            model.addAttribute("TextAndInfos",textAndInfos);
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             return "上传失败," + e.getMessage();
@@ -130,7 +156,6 @@ public class AutoController {
                 }
             }
             Collections.sort(head); //排序
-            head.remove(0);
             //分割
             StringBuffer[] questions = new StringBuffer[head.size()];
             for (i = 0; i < head.size(); i++) {
@@ -194,6 +219,8 @@ public class AutoController {
                 Question question = new Question();
                 question.setProblemid(problemid);
                 question.setText(text);
+                //System.out.print(text);
+                //System.out.print("\n");
                 question.setInnerorder(-1);
                 question.setOptions(0);
                 question.setTypeid(typeid);
