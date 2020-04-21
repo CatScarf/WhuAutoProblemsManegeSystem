@@ -12,7 +12,7 @@ import javax.persistence.*;
 public class HKeyWord {
     @Id //标注这是一个主键
     @GeneratedValue(strategy= GenerationType.IDENTITY) //自增主键
-    private Integer id;
+    private int id;
     @Column(name="classifyid") //分类ID
     private Integer classifyId;
     @Lob //关键词

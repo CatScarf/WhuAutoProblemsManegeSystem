@@ -10,5 +10,5 @@ public interface HKeyWordRepository extends JpaRepository<HKeyWord, Integer> {
     @Query(value="select * from hkeywords", nativeQuery = true)
     List<HKeyWord> getAll();
 
-    HKeyWord getOne(Integer id);
+    List<HKeyWord> findByClassifyId(Integer classifyid);
 }

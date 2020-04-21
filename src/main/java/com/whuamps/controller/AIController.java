@@ -11,8 +11,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
@@ -73,12 +76,41 @@ public class AIController {
     //开始训练
     @PostMapping("/trainModel")
     public String trainModel(Model model){
+
+        List<HKeyWord> hKeyWords = hKeyWordRepository.getAll();
+        for(HKeyWord hKeyWord : hKeyWords){
+            System.out.println(hKeyWord.getId() + " " + hKeyWord.getClassifyId() + " " + hKeyWord.getKeywordName());
+        }
+
         try{
             classifyService.createHeadWekaModel();
             return toTrainWithMsg("模型训练成功！",model);
         }catch(Exception e){
             System.out.println(e.getMessage());
+            return toTrainWithMsg("模型训练失败！" + e.getMessage(), model);
         }
-        return toTrainWithMsg("模型训练失败！",model);
+    }
+
+    @GetMapping("/getResult/{word}")
+    public String modelExercise(@PathVariable("word")String word,Model model) {
+        try {
+            String result = classifyService.getResultByExecuteParticipleAndClassify(word);
+            return toTrainWithMsg("结果为：" + result , model);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return toTrainWithMsg("识别失败！" +  e.getMessage(),model);
+        }
+    }
+
+    @PostMapping("/qustionhead")
+    public String qustionHead(Model model, HttpServletRequest request){
+        try {
+            String word = request.getParameterMap().get("qustionhead")[0];
+            String result = classifyService.getResultByExecuteParticipleAndClassify(word);
+            return toTrainWithMsg("结果为：" + result , model);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return toTrainWithMsg("识别失败！" +  e.getMessage(),model);
+        }
     }
 }

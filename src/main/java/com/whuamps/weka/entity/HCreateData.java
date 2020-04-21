@@ -23,6 +23,8 @@ public class HCreateData implements Serializable {
     private String testValue;
 
     public HCreateData(String classifyName, String keywordName) {
+        this.classifyName = classifyName;
+        this.testValue = keywordName;
     }
 
     public static long getSerialVersionUID() {

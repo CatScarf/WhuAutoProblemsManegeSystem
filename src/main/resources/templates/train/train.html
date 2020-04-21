@@ -19,9 +19,6 @@
 	<!--引入顶栏-->
 	<!--模板名，会使用Thymeleaf的前后缀配置规则进行解析-->
 	<div th:replace="~{commens/bar::topbar}"></div>
-
-		<p>注意！此页面各项功能花费时间极长，请勿轻易使用！</p>
-
 		<div class="container-fluid">
 			<div class="row">
 
@@ -59,6 +56,16 @@
 									</form>
 								</td>
 							</tr>
+							<form th:action="@{/qustionhead}" method="post">
+								<tr>
+									<td>
+										<input th:name="qustionhead" class="form-control" style="white-space:pre-wrap;"></input>
+									</td>
+									<td>
+										<button type="submit" name="submit" class="btn btn-sm btn btn-primary">判断是否为首行</button>
+									</td>
+								</tr>
+							</form>
 						</tbody>
 					</table>
 				</div>

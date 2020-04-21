@@ -56,9 +56,11 @@ public class ClassifyService {
      * @return
      */
     private Instances generateInstance(List<HClassify> allHClassifyList) {
+        //System.out.println("开始生成Instance");
         // 得到所有的分类名
         List<String> varietyOfClassify = new ArrayList<>(100);
         for (HClassify HClassify : allHClassifyList) {
+            //System.out.println("分类名：" + HClassify.getClassifyName());
             varietyOfClassify.add(HClassify.getClassifyName());
         }
         // 构建@data训练集数据
@@ -97,9 +99,11 @@ public class ClassifyService {
      * @return
      */
     private List<HCreateData> createArffData(List<HClassify> allHClassifyList) {
+        //System.out.println("开始创建ArffData数据");
         List<HCreateData> createArffData = new ArrayList<>();
         for (HClassify HClassify : allHClassifyList) {
-            List<HKeyWord> classifyKeywordByClassifyId = (List<HKeyWord>) hKeyWordRepository.getOne(HClassify.getId());
+            List<HKeyWord> classifyKeywordByClassifyId = hKeyWordRepository.findByClassifyId(HClassify.getId());
+            //System.out.println("分类id: " + HClassify.getId() + " 分类名: " + HClassify.getClassifyName() + "该分类的数据数量" + classifyKeywordByClassifyId.size());
             for (int i = 0; i < classifyKeywordByClassifyId.size(); i++) {
                 createArffData.add(new HCreateData(HClassify.getClassifyName(), classifyKeywordByClassifyId.get(i).getKeywordName()));
             }
@@ -113,7 +117,7 @@ public class ClassifyService {
             if (word.isBlank()) {
                 return "";
             }
-            System.out.println("需要分类的词是" + word);
+            //System.out.println("需要分类的词是" + word);
 
             // 加载词库模型
             FilteredClassifier model = WekaUtil.loadModel(modelPath);
@@ -121,7 +125,7 @@ public class ClassifyService {
             List<String> nameString = allHClassifyList.stream().map(HClassify::getClassifyName).collect(Collectors.toList());
             // 得到分类结果
             String result = makeInstance(model, nameString, word);
-            System.out.println("分类结果" + result);
+           // System.out.println("分类结果" + result);
             return result;
         } catch (Exception e) {
             System.out.println("wordclassify error ,  detail message:{}" + e.toString());

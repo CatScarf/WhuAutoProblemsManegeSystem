@@ -15,6 +15,7 @@ public class WekaUtil {
 
     //加载数据生成Instances
     public static Instances loadDataset(String fileName) throws FileNotFoundException {
+        System.out.println("Util:加载数据生成Instances");
         try(BufferedReader reader = new BufferedReader(new FileReader(fileName))){
                 ArffLoader.ArffReader arffReader=new ArffLoader.ArffReader(reader);
                 Instances trainData = arffReader.getData();
@@ -28,16 +29,20 @@ public class WekaUtil {
 
     //拿到数据集后开始训练
     public static FilteredClassifier evaluateAndLearn(Instances trainData){
+        //System.out.println("Util:数据集已确认，开始训练");
         try{
             StringToWordVector filter = new StringToWordVector();
             filter.setAttributeIndices("last");
             FilteredClassifier classifier = new FilteredClassifier();
             classifier.setFilter(filter);
-
+            //System.out.println("算法：RandomTree");
             //可选择不同的算法
             classifier.setClassifier(new RandomTree());
+            System.out.println("即将加载训练数据");
             classifier.buildClassifier(trainData); //加载训练数据
+            System.out.println("成功加载训练数据");
             Evaluation eval = new Evaluation(trainData);
+            System.out.println("开始训练");
             eval.crossValidateModel(classifier, trainData,2,new Debug.Random(1));
             trainData.setClassIndex(0);
             return classifier;

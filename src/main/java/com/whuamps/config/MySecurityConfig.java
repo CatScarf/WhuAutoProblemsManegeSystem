@@ -29,7 +29,7 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter{
                         "/problem","/question","/subject","type",
                         "/problem/**","/question/**","/subject/**","/type/**",
                         "/auto","/upload","/autohandle","/autohandle1","/autohandle2",
-                        "/train"
+                        "/train","/getResult/**","/trainModel","/generateHTrainingSet","/deleteHTrainingSet"
                         ).hasRole("USER");
         //开启自动配置的登陆功能
         http.formLogin().usernameParameter("username")

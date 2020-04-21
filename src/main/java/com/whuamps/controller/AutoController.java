@@ -5,6 +5,7 @@ import com.whuamps.repository.ProblemRepository;
 import com.whuamps.repository.QuestionRepository;
 import com.whuamps.repository.SubjectRepository;
 import com.whuamps.repository.TypeRepository;
+import com.whuamps.weka.ClassifyService;
 import org.apache.poi.hwpf.extractor.WordExtractor;
 import org.apache.poi.ooxml.POIXMLDocument;
 import org.apache.poi.ooxml.extractor.POIXMLTextExtractor;
@@ -34,6 +35,8 @@ public class AutoController {
     ProblemRepository problemRepository;
     @Autowired
     QuestionRepository questionRepository;
+    @Autowired
+    ClassifyService classifyService;
 
     @GetMapping({"/upload","/autohandle1","autohandel2"})
     public String back(){
@@ -84,6 +87,8 @@ public class AutoController {
             //机器学习
             Boolean[] isDeleted = new Boolean[text.length]; //是否删除
             Boolean[] isHead = new Boolean[text.length]; //是否为首行
+
+
             Arrays.fill(isDeleted, false);
             Arrays.fill(isHead, false);
 
@@ -91,6 +96,14 @@ public class AutoController {
             for(int i = 0; i < text.length; i++){
                 if(text[i].isBlank()){
                     isDeleted[i] = true;
+                }else{
+                    String result = classifyService.getResultByExecuteParticipleAndClassify(text[i]);
+                    System.out.println("问题 " + i + " 的判断结果: " + result);
+                    if(result.equals("true")){
+                        isHead[i] = true;
+                    }else{
+                        isHead[i] = false;
+                    }
                 }
             }
 
