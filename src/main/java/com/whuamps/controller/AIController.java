@@ -5,7 +5,6 @@ import com.whuamps.repository.QuestionRepository;
 import com.whuamps.weka.ClassifyService;
 import com.whuamps.weka.entity.HKeyWord;
 import com.whuamps.weka.reposiry.HKeyWordRepository;
-import javassist.compiler.ast.Keyword;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,8 +14,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.util.List;
+import java.util.Vector;
 
 @Controller
 public class AIController {
@@ -35,6 +35,7 @@ public class AIController {
     public String toTrain(Model model){
         model.addAttribute("question_quantity",questionRepository.count());
         model.addAttribute("htrainningset_quantity",hKeyWordRepository.count());
+        model.addAttribute("model_path",classifyService.getModelPath());
         return "train/train";
     }
 
@@ -43,6 +44,7 @@ public class AIController {
         model.addAttribute("question_quantity",questionRepository.count());
         model.addAttribute("htrainningset_quantity",hKeyWordRepository.count());
         model.addAttribute("msg", msg);
+        model.addAttribute("model_path",classifyService.getModelPath());
         return "train/train";
     }
 
@@ -56,6 +58,7 @@ public class AIController {
     @PostMapping("/generateHTrainingSet")
     public String generateHTrainingSet(Model model){
         List<Question> questionList = questionRepository.getAll();
+        Vector<HKeyWord> hKeyWords = new Vector<HKeyWord>();
         for(Question question : questionList){
             String[] text = question.getText().split("\n");
             for(int i = 0; i < text.length; i++){
@@ -67,23 +70,32 @@ public class AIController {
                     hKeyWord.setClassifyId(2);
                     hKeyWord.setKeywordName(text[i]);
                 }
-                //存储
-                hKeyWordRepository.save(hKeyWord);
+                hKeyWords.add(hKeyWord);
             }
         }
+        //存储
+        hKeyWordRepository.saveAll(hKeyWords);
         return toTrainWithMsg("成功生成训练集！",model);
     }
     //开始训练
     @PostMapping("/trainModel")
-    public String trainModel(Model model){
+    public String trainModel(Model model, HttpServletRequest req){
 
         List<HKeyWord> hKeyWords = hKeyWordRepository.getAll();
+
         for(HKeyWord hKeyWord : hKeyWords){
             System.out.println(hKeyWord.getId() + " " + hKeyWord.getClassifyId() + " " + hKeyWord.getKeywordName());
         }
 
         try{
-            classifyService.createHeadWekaModel();
+            //文件名
+            String fileName = "model.arff";
+            //路径名
+            String modelPath = System.getProperty("user.dir") + File.separator + "model" + File.separator + fileName;
+            File destFile = new File(modelPath);
+            //创建文件夹
+            destFile.getParentFile().mkdirs();
+            classifyService.createHeadWekaModel(modelPath);
             return toTrainWithMsg("模型训练成功！",model);
         }catch(Exception e){
             System.out.println(e.getMessage());

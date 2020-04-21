@@ -48,8 +48,8 @@
 								</td>
 							</tr>
 							<tr>
-								<td>已训练的模型</td>
-								<td>Model.atff</td>
+								<td>当前模型路径</td>
+								<td th:text="${not #strings.isEmpty(model_path)?model_path:'null'}"></td>
 								<td>
 									<button type="submit" class = "btn btn-sm btn-danger trainBtn1">开始训练</button>
 									<form id="trainModelForm" th:action="@{/trainModel}" method="post" style="display:none">
@@ -58,6 +58,9 @@
 							</tr>
 							<form th:action="@{/qustionhead}" method="post">
 								<tr>
+									<td>
+										快速判断
+									</td>>
 									<td>
 										<input th:name="qustionhead" class="form-control" style="white-space:pre-wrap;"></input>
 									</td>

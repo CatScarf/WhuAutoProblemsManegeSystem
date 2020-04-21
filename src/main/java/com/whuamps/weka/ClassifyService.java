@@ -13,6 +13,7 @@ import weka.core.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,11 +26,20 @@ public class ClassifyService {
 
 //    @Value("${model.path}")
 //    private String modelPath;
-    private String modelPath = "C://Users/胡津彰/Documents/Model/Model1.arff";
+    private String modelPath = "No Model";
+
+    public String getModelPath() {
+        return modelPath;
+    }
+
+    public void setModelPath(String modelPath) {
+        this.modelPath = modelPath;
+    }
 
     //训练模型
     @Transactional
-    public void createHeadWekaModel() {
+    public void createHeadWekaModel(String modelPath) {
+        this.modelPath = modelPath;
         // 从数据库查找到所有分类数据
         List<HClassify> allHClassifyList = hClassifyRepository.getAll();
         if (allHClassifyList == null || allHClassifyList.isEmpty()) {
@@ -125,12 +135,39 @@ public class ClassifyService {
             List<String> nameString = allHClassifyList.stream().map(HClassify::getClassifyName).collect(Collectors.toList());
             // 得到分类结果
             String result = makeInstance(model, nameString, word);
-           // System.out.println("分类结果" + result);
+            // System.out.println("分类结果" + result);
             return result;
         } catch (Exception e) {
             System.out.println("wordclassify error ,  detail message:{}" + e.toString());
         }
         return "";
+    }
+
+    @Transactional
+    public Vector<String> getResultsByExecuteParticipleAndClassify(Vector<String> words) {
+        try {
+            for(String word : words){
+                //System.out.println(word);
+            }
+
+            // 加载词库模型
+            FilteredClassifier model = WekaUtil.loadModel(modelPath);
+            List<HClassify> allHClassifyList = hClassifyRepository.getAll();
+            List<String> nameString = allHClassifyList.stream().map(HClassify::getClassifyName).collect(Collectors.toList());
+            // 得到分类结果
+            Vector<String> results = new Vector<String>();
+            for(int i = 0; i < words.size(); i++){
+                String result = makeInstance(model, nameString, words.get(i));
+                results.add(result);
+                System.out.println(i + "/" +  words.size() + " " + result);
+            }
+
+            // System.out.println("分类结果" + result);
+            return results;
+        } catch (Exception e) {
+            System.out.println("wordclassify error ,  detail message:{}" + e.toString());
+        }
+        return new Vector<String>();
     }
 
     /**

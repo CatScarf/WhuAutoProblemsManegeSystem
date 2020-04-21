@@ -32,3 +32,5 @@ build/
 
 ### sql server info ###
 /src/main/resources/application-sql.yml
+
+/model

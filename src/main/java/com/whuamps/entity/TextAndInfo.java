@@ -11,9 +11,9 @@ public class TextAndInfo {
         this.text = text;
         this.isDeleted = isDeleted;
         if(isDeleted == true){
-            isHead = false;
+            this.isHead = false;
         }else{
-            isHead = true;
+            this.isHead = isHead;
         }
     }
 

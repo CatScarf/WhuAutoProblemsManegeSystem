@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.w3c.dom.Text;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
@@ -55,7 +56,7 @@ public class AutoController {
             //文件名
             String fileName = System.currentTimeMillis() + file.getOriginalFilename();
             //路径名
-            String path = req.getServletContext().getRealPath("") + "uploaded" + File.separator + fileName;
+            String path = System.getProperty("user.dir") + File.separator + "uploaded" + File.separator + fileName;
             //创建文件
             File destFile = new File(path);
             //创建文件夹
@@ -92,21 +93,24 @@ public class AutoController {
             Arrays.fill(isDeleted, false);
             Arrays.fill(isHead, false);
 
+            Vector<String> results = classifyService.getResultsByExecuteParticipleAndClassify(new Vector<String>(Arrays.asList(text)));
+
             //判断是否删除
             for(int i = 0; i < text.length; i++){
                 if(text[i].isBlank()){
                     isDeleted[i] = true;
                 }else{
-                    String result = classifyService.getResultByExecuteParticipleAndClassify(text[i]);
-                    System.out.println("问题 " + i + " 的判断结果: " + result);
+                    String result = results.get(i);
+                    //System.out.println(i + "/" +  text.length + " " + result);
                     if(result.equals("true")){
                         isHead[i] = true;
-                    }else{
+                    }else if(result.equals("false")){
                         isHead[i] = false;
+                    }else{
+                        System.out.println("判断错误！");
                     }
                 }
             }
-
 
             //把问题放入Model
             List<TextAndInfo> textAndInfos = new ArrayList<>();
@@ -114,6 +118,9 @@ public class AutoController {
                 textAndInfos.add(new TextAndInfo(text[i],isDeleted[i],isHead[i]));
             }
 
+            for(TextAndInfo t : textAndInfos){
+                //System.out.print(t.getIsHead() + " ");
+            }
 
             model.addAttribute("TextAndInfos",textAndInfos);
 
