@@ -1,7 +1,7 @@
 package com.whuamps.weka;
 
 import com.whuamps.weka.entity.HClassify;
-import com.whuamps.weka.entity.HCreateData;
+import com.whuamps.weka.entity.CreateData;
 import com.whuamps.weka.entity.HKeyWord;
 import com.whuamps.weka.reposiry.HClassifyRepository;
 import com.whuamps.weka.reposiry.HKeyWordRepository;
@@ -17,7 +17,7 @@ import java.util.Vector;
 import java.util.stream.Collectors;
 
 @Service
-public class ClassifyService {
+public class HClassifyService {
 
     @Autowired
     HClassifyRepository hClassifyRepository; //分类名
@@ -74,7 +74,7 @@ public class ClassifyService {
             varietyOfClassify.add(HClassify.getClassifyName());
         }
         // 构建@data训练集数据
-        List<HCreateData> entities = createArffData(allHClassifyList);
+        List<CreateData> entities = createArffData(allHClassifyList);
 
         ArrayList<Attribute> attributes = new ArrayList<>();
         attributes.add(new Attribute("@@class@@", varietyOfClassify));
@@ -86,7 +86,7 @@ public class ClassifyService {
         instances.setClassIndex(instances.numAttributes() - 1);
 
         // 添加数据到@data
-        for (HCreateData secRepoEntity : entities) {
+        for (CreateData secRepoEntity : entities) {
             Instance instance = new DenseInstance(attributes.size());
             // 必须放在创建一个新的instance后 否则会报没加入Dataset异常
             instance.setDataset(instances);
@@ -108,14 +108,14 @@ public class ClassifyService {
      * @param allHClassifyList
      * @return
      */
-    private List<HCreateData> createArffData(List<HClassify> allHClassifyList) {
+    private List<CreateData> createArffData(List<HClassify> allHClassifyList) {
         //System.out.println("开始创建ArffData数据");
-        List<HCreateData> createArffData = new ArrayList<>();
+        List<CreateData> createArffData = new ArrayList<>();
         for (HClassify HClassify : allHClassifyList) {
             List<HKeyWord> classifyKeywordByClassifyId = hKeyWordRepository.findByClassifyId(HClassify.getId());
             //System.out.println("分类id: " + HClassify.getId() + " 分类名: " + HClassify.getClassifyName() + "该分类的数据数量" + classifyKeywordByClassifyId.size());
             for (int i = 0; i < classifyKeywordByClassifyId.size(); i++) {
-                createArffData.add(new HCreateData(HClassify.getClassifyName(), classifyKeywordByClassifyId.get(i).getKeywordName()));
+                createArffData.add(new CreateData(HClassify.getClassifyName(), classifyKeywordByClassifyId.get(i).getKeywordName()));
             }
         }
         return createArffData;

@@ -19,10 +19,19 @@ spring:
     hikari:
       max-lifetime: 1200000
   jpa:
+    properties:
+      hibernate:
+        jdbc:
+          batch_size: 500 #批量操作
+          batch_versioned_data: true
+        order_inserts: true
+        order_updates: true
+
     hibernate:
       #更新或者创建数据表结构
       ddl-auto: update
-      #控制台显示sql
+      generate_statistics: true
+    #控制台显示sql
     show-sql: true
 
 server:

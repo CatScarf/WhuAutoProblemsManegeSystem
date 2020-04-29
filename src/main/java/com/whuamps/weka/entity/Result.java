@@ -1,7 +1,7 @@
 package com.whuamps.weka.entity;
 
 
-public class HResult<T> {
+public class Result<T> {
 
     /** 错误码. */
     private Integer code;

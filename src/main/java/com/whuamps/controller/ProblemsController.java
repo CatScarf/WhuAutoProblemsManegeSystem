@@ -301,7 +301,7 @@ public class ProblemsController {
         return "problems/changetype";
     }
 
-    //改：修改提醒
+    //改：修改题型
     @PutMapping("/type")
     public String changeType(TypeRow row){
         typeRepository.deleteById(Integer.parseInt(row.getId()));

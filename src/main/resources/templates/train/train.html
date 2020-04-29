@@ -21,59 +21,105 @@
 	<div th:replace="~{commens/bar::topbar}"></div>
 		<div class="container-fluid">
 			<div class="row">
-
-			<main role="auto" class="col-md-12 ml-sm-auto col-lg-12 pt-3 px-4">
-				<p style="color:red">注意！此页面各项功能花费时间极长，请勿轻易使用！</p>
-				<p style="color:green" th:text="${msg}" th:if="${not #strings.isEmpty(msg)}"></p>
-				<div class="table-responsive" style="text-align: center;">
-					<table class="table table-striped table-sm">
-						<tbody>
-							<tr>
-								<td>题库内问题数量</td>
-								<td>[[${question_quantity}]]</td>
-								<td>
-									<button type="submit" class = "btn btn-sm btn-danger deleteBtn1">清空训练集</button>
-									<form id="deleteHTrainingSetForm" th:action="@{/deleteHTrainingSet}" method="post" style="display:none">
-										<input type="hidden" name="_method" value="delete" style="display:none">
-									</form>
-								</td>
-							</tr>
-							<tr>
-								<td>训练集数量</td>
-								<td>[[${htrainningset_quantity}]]</td>
-								<td>
-									<button type="submit" class = "btn btn-sm btn-primary generateBtn1">生成训练集</button>
-									<form id="generateHTrainingSetForm" th:action="@{/generateHTrainingSet}" method="post" style="display:none">
-									</form>
-								</td>
-							</tr>
-							<tr>
-								<td>当前模型路径</td>
-								<td th:text="${not #strings.isEmpty(model_path)?model_path:'null'}"></td>
-								<td>
-									<button type="submit" class = "btn btn-sm btn-danger trainBtn1">开始训练</button>
-									<form id="trainModelForm" th:action="@{/trainModel}" method="post" style="display:none">
-									</form>
-								</td>
-							</tr>
-							<form th:action="@{/qustionhead}" method="post">
+				<main role="auto" class="col-md-12 ml-sm-auto col-lg-12 pt-3 px-4">
+					<p style="color:red">注意！此页面各项功能花费时间极长，请勿轻易使用！</p>
+					<p style="color:green" th:text="${msg}" th:if="${not #strings.isEmpty(msg)}"/>
+					<div class="table-responsive">
+						<table class="table table-striped table-sm">
+							<tbody>
 								<tr>
+									<td>题库内问题数量</td>
+									<td>[[${question_quantity}]]</td>
 									<td>
-										快速判断
-									</td>>
-									<td>
-										<input th:name="qustionhead" class="form-control" style="white-space:pre-wrap;"></input>
-									</td>
-									<td>
-										<button type="submit" name="submit" class="btn btn-sm btn btn-primary">判断是否为首行</button>
+										<button type="submit" class = "btn btn-sm btn-danger deleteBtn1">清空首行判断训练集</button>
+										<form id="deleteHTrainingSetForm" th:action="@{/deleteHTrainingSet}" method="post" style="display:none">
+											<input type="hidden" name="_method" value="delete" style="display:none">
+										</form>
 									</td>
 								</tr>
-							</form>
-						</tbody>
-					</table>
-				</div>
-			</main>
+								<tr>
+									<td>首行判断训练集数量</td>
+									<td>[[${htrainningset_quantity}]]</td>
+									<td>
+										<button type="submit" class = "btn btn-sm btn-primary generateBtn1">生成首行判断训练集</button>
+										<form id="generateHTrainingSetForm" th:action="@{/generateHTrainingSet}" method="post" style="display:none">
+										</form>
+									</td>
+								</tr>
+								<tr>
+									<td>当前首行判断模型路径</td>
+									<td th:text="${not #strings.isEmpty(model_path)?model_path:'null'}"></td>
+									<td>
+										<button type="submit" class = "btn btn-sm btn-danger trainBtn1">开始训练首行判断模型</button>
+										<form id="trainModelForm" th:action="@{/trainModel}" method="post" style="display:none"></form>
+									</td>
+								</tr>
+								<form th:action="@{/qustionhead}" method="post">
+									<tr>
+										<td>
+											快速判断
+										</td>>
+										<td>
+											<input th:name="qustionhead" class="form-control" style="white-space:pre-wrap;height:30px"></input>
+										</td>
+										<td>
+											<button type="submit" name="submit" class="btn btn-sm btn btn-primary">判断是否为首行</button>
+										</td>
+									</tr>
+								</form>
 
+								<tr>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+								</tr>
+
+								<tr>
+									<td>题库内问题数量</td>
+									<td>[[${question_quantity}]]</td>
+									<td>
+										<button type="submit" class = "btn btn-sm btn-danger deleteBtn2">清空题型分类训练集</button>
+										<form id="deleteTTrainingSetForm" th:action="@{/deleteTTrainingSet}" method="post" style="display:none">
+											<input type="hidden" name="_method" value="delete" style="display:none">
+										</form>
+									</td>
+								</tr>
+								<tr>
+									<td>题型分类训练集数量</td>
+									<td>[[${ttrainningset_quantity}]]</td>
+									<td>
+										<button type="submit" class = "btn btn-sm btn-primary generateBtn2">生成题型分类训练集</button>
+										<form id="generateTTrainingSetForm" th:action="@{/generateTTrainingSet}" method="post" style="display:none">
+										</form>
+									</td>
+								</tr>
+								<tr>
+									<td>当前题型分类模型路径</td>
+									<td th:text="${not #strings.isEmpty(tmodel_path)?tmodel_path:'null'}"></td>
+									<td>
+										<button type="submit" class = "btn btn-sm btn-danger trainBtn2">开始训练题型分类模型</button>
+										<form id="trainModel2Form" th:action="@{/trainModel2}" method="post" style="display:none"></form>
+									</td>
+								</tr>
+								<form th:action="@{/judgetype}" method="post">
+									<tr>
+										<td>
+											快速判断
+										</td>>
+										<td>
+											<input th:name="judgetype" class="form-control" style="white-space:pre-wrap;height:30px"></input>
+										</td>
+										<td>
+											<button type="submit" name="submit" class="btn btn-sm btn btn-primary">判断题型</button>
+										</td>
+									</tr>
+								</form>
+							</tbody>
+						</table>
+					</div>
+
+				</main>
+			</div>
 		</div>
 	</div>
 
@@ -105,7 +151,26 @@
 
 			$(".trainBtn1").click(function(){
 				//开始训练
-				$("#trainModelForm").submit();
+				$("#trainModel1Form").submit();
+				return true;
+			});
+
+
+			$(".deleteBtn2").click(function(){
+				//删除训练集
+				$("#deleteTTrainingSetForm").submit();
+				return true;
+			});
+
+			$(".generateBtn2").click(function(){
+				//生成训练集
+				$("#generateTTrainingSetForm").submit();
+				return true;
+			});
+
+			$(".trainBtn2").click(function(){
+				//开始训练
+				$("#trainModel2Form").submit();
 				return true;
 			});
 		</script>

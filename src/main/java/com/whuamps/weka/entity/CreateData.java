@@ -12,7 +12,7 @@ import java.io.Serializable;
 // Serializable是一个对象序列化的接口
 // 一个类只有实现了Serializable接口
 // 它的对象才能被序列化
-public class HCreateData implements Serializable {
+public class CreateData implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -22,7 +22,7 @@ public class HCreateData implements Serializable {
     //文本值
     private String testValue;
 
-    public HCreateData(String classifyName, String keywordName) {
+    public CreateData(String classifyName, String keywordName) {
         this.classifyName = classifyName;
         this.testValue = keywordName;
     }

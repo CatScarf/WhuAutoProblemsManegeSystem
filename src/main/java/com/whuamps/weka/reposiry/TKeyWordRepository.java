@@ -1,6 +1,6 @@
 package com.whuamps.weka.reposiry;
 
-import com.whuamps.weka.entity.HKeyWord;
+import com.whuamps.weka.entity.TKeyWord;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -10,11 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Repository
-public interface HKeyWordRepository extends JpaRepository<HKeyWord, Integer> {
+public interface TKeyWordRepository extends JpaRepository<TKeyWord, Integer> {
     @Transactional
     @Modifying
-    @Query(value = "delete from hkeywords",nativeQuery = true)
+    @Query(value = "delete from tkeywords",nativeQuery = true)
     public int deleteAllData();
 
-    public List<HKeyWord> findByClassifyId(Integer classifyid);
+    public List<TKeyWord> findByClassifyId(Integer classifyid);
 }

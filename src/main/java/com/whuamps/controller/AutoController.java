@@ -5,7 +5,7 @@ import com.whuamps.repository.ProblemRepository;
 import com.whuamps.repository.QuestionRepository;
 import com.whuamps.repository.SubjectRepository;
 import com.whuamps.repository.TypeRepository;
-import com.whuamps.weka.ClassifyService;
+import com.whuamps.weka.HClassifyService;
 import org.apache.poi.hwpf.extractor.WordExtractor;
 import org.apache.poi.ooxml.POIXMLDocument;
 import org.apache.poi.ooxml.extractor.POIXMLTextExtractor;
@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.w3c.dom.Text;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
@@ -37,7 +36,7 @@ public class AutoController {
     @Autowired
     QuestionRepository questionRepository;
     @Autowired
-    ClassifyService classifyService;
+    HClassifyService HClassifyService;
 
     @GetMapping({"/upload","/autohandle1","autohandel2"})
     public String back(){
@@ -93,7 +92,7 @@ public class AutoController {
             Arrays.fill(isDeleted, false);
             Arrays.fill(isHead, false);
 
-            Vector<String> results = classifyService.getResultsByExecuteParticipleAndClassify(new Vector<String>(Arrays.asList(text)));
+            Vector<String> results = HClassifyService.getResultsByExecuteParticipleAndClassify(new Vector<String>(Arrays.asList(text)));
 
             //判断是否删除
             for(int i = 0; i < text.length; i++){
