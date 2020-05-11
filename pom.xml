@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.whuapms</groupId>
 	<artifactId>whuapms</artifactId>
-	<version>0.4.0</version>
+	<version>1.0.0</version>
 	<name>whu-auto-problems-manage-system</name>
 	<description>WHU Auto Problems Manage System</description>
 

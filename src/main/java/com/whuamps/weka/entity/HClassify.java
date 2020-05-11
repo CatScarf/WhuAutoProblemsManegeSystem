@@ -7,16 +7,16 @@ import javax.persistence.*;
 @Table(name="hclassifys")
 public class HClassify {
     @Id //标注这是一个主键
-    private Integer id;
+    private int id;
 
     @Column(name="classifyname") //分类名
     private String classifyName;
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 

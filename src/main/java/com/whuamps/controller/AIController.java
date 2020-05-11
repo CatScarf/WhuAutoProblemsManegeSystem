@@ -13,7 +13,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
@@ -92,24 +91,19 @@ public class AIController {
         return toTrainWithMsg("成功生成训练集！",model);
     }
     //开始首行训练
-    @PostMapping("/trainModel")
+    @PostMapping("/trainModel1")
     public String trainModel(Model model, HttpServletRequest req){
-
         List<HKeyWord> hKeyWords = hKeyWordRepository.findAll();
-
-        for(HKeyWord hKeyWord : hKeyWords){
-            //System.out.println(hKeyWord.getId() + " " + hKeyWord.getClassifyId() + " " + hKeyWord.getKeywordName());
-        }
 
         try{
             //文件名
-            String fileName = "model.arff";
+            String fileName = "model_head.arff";
             //路径名
             String modelPath = System.getProperty("user.dir") + File.separator + "model" + File.separator + fileName;
             File destFile = new File(modelPath);
             //创建文件夹
             destFile.getParentFile().mkdirs();
-            hClassifyService.createHeadWekaModel(modelPath);
+            hClassifyService.createHClassifyWekaModel(modelPath);
             return toTrainWithMsg("模型训练成功！",model);
         }catch(Exception e){
             System.out.println(e.getMessage());
@@ -117,19 +111,7 @@ public class AIController {
         }
     }
 
-//    //快速判断是否为首行
-//    @GetMapping("/getResult/{word}")
-//    public String modelExercise(@PathVariable("word")String word,Model model) {
-//        try {
-//            String result = HClassifyService.getResultByExecuteParticipleAndClassify(word);
-//            return toTrainWithMsg("结果为：" + result , model);
-//        } catch (Exception e) {
-//            System.out.println(e.getMessage());
-//            return toTrainWithMsg("识别失败！" +  e.getMessage(),model);
-//        }
-//    }
-
-
+    //快速判断是否为首行
     @PostMapping("/qustionhead")
     public String qustionHead(Model model, HttpServletRequest request){
         try {

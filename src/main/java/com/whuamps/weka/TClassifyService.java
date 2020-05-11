@@ -57,7 +57,7 @@ public class TClassifyService {
         // 模型学习
         FilteredClassifier evaluateAndLearn = WekaUtil.evaluateAndLearn(trainData);
         WekaUtil.saveModel(modelPath, evaluateAndLearn);
-        System.out.println("收入分类模型训练完毕并存储到硬盘");
+        System.out.println("题型分类模型训练完毕并存储到硬盘");
     }
 
     /**

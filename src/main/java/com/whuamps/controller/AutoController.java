@@ -6,6 +6,7 @@ import com.whuamps.repository.QuestionRepository;
 import com.whuamps.repository.SubjectRepository;
 import com.whuamps.repository.TypeRepository;
 import com.whuamps.weka.HClassifyService;
+import com.whuamps.weka.TClassifyService;
 import org.apache.poi.hwpf.extractor.WordExtractor;
 import org.apache.poi.ooxml.POIXMLDocument;
 import org.apache.poi.ooxml.extractor.POIXMLTextExtractor;
@@ -36,7 +37,9 @@ public class AutoController {
     @Autowired
     QuestionRepository questionRepository;
     @Autowired
-    HClassifyService HClassifyService;
+    HClassifyService hClassifyService;
+    @Autowired
+    TClassifyService tClassifyService;
 
     @GetMapping({"/upload","/autohandle1","autohandel2"})
     public String back(){
@@ -92,7 +95,7 @@ public class AutoController {
             Arrays.fill(isDeleted, false);
             Arrays.fill(isHead, false);
 
-            Vector<String> results = HClassifyService.getResultsByExecuteParticipleAndClassify(new Vector<String>(Arrays.asList(text)));
+            Vector<String> results = hClassifyService.getResultsByExecuteParticipleAndClassify(new Vector<String>(Arrays.asList(text)));
 
             //判断是否删除
             for(int i = 0; i < text.length; i++){
@@ -202,10 +205,32 @@ public class AutoController {
                     }
                 }
             }
-            //写入model
-            model.addAttribute("questions", questions);
+
+            //机器学习
+            //将 StringBuffer[] 转换为 String[]
+            String[] questions_string = new String[questions.length];
+            for(i = 0; i < questions_string.length; i++){
+                questions_string[i] = questions[i].toString();
+            }
+
+            Integer[] type_judged = new Integer[questions.length]; //判断题型
+            Vector<String> type_results = tClassifyService.getResultsByExecuteParticipleAndClassify(new Vector<String>(Arrays.asList(questions_string))); //应用机器学习模型
             //所有题目类型
             List<Type> types = typeRepository.getAll();
+            Map<String, Integer> m = new HashMap<String, Integer>();
+            for(i = 0; i < types.size(); i++){
+                m.put(types.get(i).getType(), types.get(i).getId());
+            }
+
+            //创建QuestionAndInfos
+            List<QuestionAndInfo> questionAndInfos = new ArrayList<>();
+            for(i = 0; i < questions.length; i++){
+                questionAndInfos.add(new QuestionAndInfo(questions[i].toString(), m.get(type_results.get(i)), 0));
+            }
+
+
+            //写入model
+            model.addAttribute("questionandinfos", questionAndInfos);
             model.addAttribute("types", types);
             //所有科目
             List<Subject> subjects = subjectRepository.getAll();

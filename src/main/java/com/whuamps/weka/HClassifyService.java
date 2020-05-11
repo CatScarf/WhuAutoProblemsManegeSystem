@@ -1,9 +1,9 @@
 package com.whuamps.weka;
 
 import com.whuamps.weka.entity.HClassify;
-import com.whuamps.weka.entity.CreateData;
 import com.whuamps.weka.entity.HKeyWord;
 import com.whuamps.weka.reposiry.HClassifyRepository;
+import com.whuamps.weka.entity.CreateData;
 import com.whuamps.weka.reposiry.HKeyWordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +21,7 @@ public class HClassifyService {
 
     @Autowired
     HClassifyRepository hClassifyRepository; //分类名
+
     @Autowired
     HKeyWordRepository hKeyWordRepository; //训练集
 
@@ -38,7 +39,7 @@ public class HClassifyService {
 
     //训练模型
     @Transactional
-    public void createHeadWekaModel(String modelPath) {
+    public void createHClassifyWekaModel(String modelPath) {
         this.modelPath = modelPath;
         // 从数据库查找到所有分类数据
         List<HClassify> allHClassifyList = hClassifyRepository.getAll();
@@ -56,7 +57,7 @@ public class HClassifyService {
         // 模型学习
         FilteredClassifier evaluateAndLearn = WekaUtil.evaluateAndLearn(trainData);
         WekaUtil.saveModel(modelPath, evaluateAndLearn);
-        System.out.println("收入分类模型训练完毕并存储到硬盘");
+        System.out.println("首行分类模型训练完毕并存储到硬盘");
     }
 
     /**
@@ -69,9 +70,9 @@ public class HClassifyService {
         //System.out.println("开始生成Instance");
         // 得到所有的分类名
         List<String> varietyOfClassify = new ArrayList<>(100);
-        for (HClassify HClassify : allHClassifyList) {
-            //System.out.println("分类名：" + HClassify.getClassifyName());
-            varietyOfClassify.add(HClassify.getClassifyName());
+        for (HClassify hClassify : allHClassifyList) {
+            //System.out.println("分类名：" + HClassify.gehClassifyName());
+            varietyOfClassify.add(hClassify.getClassifyName());
         }
         // 构建@data训练集数据
         List<CreateData> entities = createArffData(allHClassifyList);
@@ -111,11 +112,11 @@ public class HClassifyService {
     private List<CreateData> createArffData(List<HClassify> allHClassifyList) {
         //System.out.println("开始创建ArffData数据");
         List<CreateData> createArffData = new ArrayList<>();
-        for (HClassify HClassify : allHClassifyList) {
-            List<HKeyWord> classifyKeywordByClassifyId = hKeyWordRepository.findByClassifyId(HClassify.getId());
-            //System.out.println("分类id: " + HClassify.getId() + " 分类名: " + HClassify.getClassifyName() + "该分类的数据数量" + classifyKeywordByClassifyId.size());
+        for (HClassify hClassify : allHClassifyList) {
+            List<HKeyWord> classifyKeywordByClassifyId = hKeyWordRepository.findByClassifyId(hClassify.getId());
+            //System.out.println("分类id: " + HClassify.getId() + " 分类名: " + HClassify.gehClassifyName() + "该分类的数据数量" + classifyKeywordByClassifyId.size());
             for (int i = 0; i < classifyKeywordByClassifyId.size(); i++) {
-                createArffData.add(new CreateData(HClassify.getClassifyName(), classifyKeywordByClassifyId.get(i).getKeywordName()));
+                createArffData.add(new CreateData(hClassify.getClassifyName(), classifyKeywordByClassifyId.get(i).getKeywordName()));
             }
         }
         return createArffData;
@@ -127,15 +128,18 @@ public class HClassifyService {
             if (word.isBlank()) {
                 return "";
             }
-            //System.out.println("需要分类的词是" + word);
 
             // 加载词库模型
             FilteredClassifier model = WekaUtil.loadModel(modelPath);
             List<HClassify> allHClassifyList = hClassifyRepository.getAll();
             List<String> nameString = allHClassifyList.stream().map(HClassify::getClassifyName).collect(Collectors.toList());
             // 得到分类结果
+
+            for(String s : nameString){
+                System.out.println(s);
+            }
+
             String result = makeInstance(model, nameString, word);
-            // System.out.println("分类结果" + result);
             return result;
         } catch (Exception e) {
             System.out.println("wordclassify error ,  detail message:{}" + e.toString());

@@ -32,13 +32,13 @@
 							<tbody>
 								<tr>
 									<td>
-										<button type="submit" name="submit" class="btn btn-primary" onclick="setAll()">批量设置科目和题型</button>
+										<button type="submit" name="submit" class="btn btn-primary" onclick="setAll()">批量设置科目</button>
 									</td>
-									<td>
-										<select class="form-control" id="all_type" style="min-width:100px;">
-											<option th:selected="${type.id eq 2}"  th:each="type:${types}" th:text="${type.type}" th:value="${type.id}"></option>
-										</select>
-									</td>
+<!--									<td>-->
+<!--										<select class="form-control" id="all_type" style="min-width:100px;">-->
+<!--											<option th:selected="${type.id eq 2}"  th:each="type:${types}" th:text="${type.type}" th:value="${type.id}"></option>-->
+<!--										</select>-->
+<!--									</td>-->
 									<td>
 										<select class="form-control" id="all_subject" style="min-width:120px;">
 											<option th:selected="${subject.id eq 1}"  th:each="subject:${subjects}" th:text="${subject.subject}" th:value="${subject.id}"></option>
@@ -69,18 +69,18 @@
                                     first:    布尔值，当前循环是否是第一个
                                     last:     布尔值，当前循环是否是最后一个
                                 -->
-								<tr th:each="p,pStat:${questions}">
+								<tr th:each="p,pStat:${questionandinfos}" th:style="'background-color:hsl(' + ${p.type}*31%360 +',100%,90%)'">
 									<td>
 										<!--用div模拟input，然后将input和div绑定-->
-										<div contenteditable=true class="myinput" th:text="${p}" th:attr="inputid=${pStat.index}" tabindex="1" style="-webkit-user-select;white-space:pre-wrap;"></div>
+										<div contenteditable=true class="myinput" th:text="${p.question}" th:attr="inputid=${pStat.index}" tabindex="1" style="-webkit-user-select;white-space:pre-wrap;"></div>
 									</td>
 									<!--隐藏的textarea，通过js和上面的div绑定-->
 									<textarea th:id="${pStat.index}" th:name="${pStat.index}" th:utext="${p}" style="display:none;white-space:pre-wrap;"></textarea>
 									<td>
 										<div class="form-group">
-											<!--提交的是科目的id-->
+											<!--提交的是题型的id-->
 											<select class="form-control type_selector" th:name="'typeid' + ${pStat.index}" style="min-width:100px;">
-												<option th:selected="${type.id eq 2}"  th:each="type:${types}" th:text="${type.type}" th:value="${type.id}"></option>
+												<option th:selected="${type.id eq p.type}"  th:each="type:${types}" th:text="${type.type}" th:value="${type.id}"></option>
 											</select>
 										</div>
 									</td>
@@ -124,14 +124,25 @@
 				document.getElementById(inputid).value = $(this).text();
 			})
 		</script>
+
+		<script>
+			$(".type_selector").change(function(){
+				var typeid = $(this).val();
+				//alert(typeid);
+				$(this).parent().parent().parent().css({"background-color":"hsl(" + typeid*31%360 + ",100%,90%)"});
+			});
+		</script>
+
 		<script>
 			function setAll(){
-				var typeid = document.getElementById("all_type").value;
+				//var typeid = document.getElementById("all_type").value;
 				var subjectid = document.getElementById("all_subject").value;
-				$(".type_selector").val(typeid);
+				//$(".type_selector").val(typeid);
 				$(".subject_selector").val(subjectid);
 			}
 		</script>
+
+
 
 		<script>
 			$(".myinput").keydown(function(event){
