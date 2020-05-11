@@ -69,18 +69,21 @@ public class AIController {
     //增：生成首行训练集
     @PostMapping("/generateHTrainingSet")
     public String generateHTrainingSet(Model model){
+        String newText;
         List<Question> questionList = questionRepository.getAll();
         Vector<HKeyWord> hKeyWords = new Vector<HKeyWord>();
         for(Question question : questionList){
             String[] text = question.getText().split("\n");
             for(int i = 0; i < text.length; i++){
                 HKeyWord hKeyWord = new HKeyWord();
+                newText = text[i].trim();
+                if(newText.length() > 20) newText = newText.substring(0,20);
                 if(i==0){ //如果是首行则分类为1
                     hKeyWord.setClassifyId(1);
-                    hKeyWord.setKeywordName(text[i]);
+                    hKeyWord.setKeywordName(newText);
                 }else{ //否则分类为2
                     hKeyWord.setClassifyId(2);
-                    hKeyWord.setKeywordName(text[i]);
+                    hKeyWord.setKeywordName(newText);
                 }
                 hKeyWords.add(hKeyWord);
             }
@@ -104,10 +107,10 @@ public class AIController {
             //创建文件夹
             destFile.getParentFile().mkdirs();
             hClassifyService.createHClassifyWekaModel(modelPath);
-            return toTrainWithMsg("模型训练成功！",model);
+            return toTrainWithMsg("首行判断模型训练成功！",model);
         }catch(Exception e){
             System.out.println(e.getMessage());
-            return toTrainWithMsg("模型训练失败！" + e.getMessage(), model);
+            return toTrainWithMsg("首行判断模型训练失败！" + e.getMessage(), model);
         }
     }
 
@@ -134,12 +137,15 @@ public class AIController {
     //增：生成题型分类训练集
     @PostMapping("/generateTTrainingSet")
     public String generateTTrainingSet(Model model){
+        String newText;
         List<Question> questionList = questionRepository.getAll();
         Vector<TKeyWord> tKeyWords = new Vector<TKeyWord>();
         for(Question question : questionList){
                 TKeyWord tKeyWord = new TKeyWord();
                 tKeyWord.setClassifyId(question.getTypeid());
-                tKeyWord.setKeywordName(question.getText());
+                newText = question.getText().trim();
+                if(newText.length() > 20) newText = newText.substring(0,20);
+                tKeyWord.setKeywordName(newText);
                 tKeyWords.add(tKeyWord);
             }
 

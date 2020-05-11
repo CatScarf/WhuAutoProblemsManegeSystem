@@ -75,7 +75,7 @@
 										<div contenteditable=true class="myinput" th:text="${p.question}" th:attr="inputid=${pStat.index}" tabindex="1" style="-webkit-user-select;white-space:pre-wrap;"></div>
 									</td>
 									<!--隐藏的textarea，通过js和上面的div绑定-->
-									<textarea th:id="${pStat.index}" th:name="${pStat.index}" th:utext="${p}" style="display:none;white-space:pre-wrap;"></textarea>
+									<textarea th:id="${pStat.index}" th:name="${pStat.index}" th:utext="${p.question}" style="display:none;white-space:pre-wrap;"></textarea>
 									<td>
 										<div class="form-group">
 											<!--提交的是题型的id-->

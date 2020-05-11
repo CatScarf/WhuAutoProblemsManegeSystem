@@ -170,7 +170,8 @@ public class AutoController {
             int[] delete = new int[text.length]; //某行是否删除
             int i = 0;
             for (String key : map.keySet()) {
-                if(Integer.parseInt(key) >= 0 ){
+                //System.out.println(key);
+                if(Integer.parseInt(key) >= 0 && !key.equals("-0")){
                     head.add(Integer.parseInt(key));
                     i++;
                 }else{
@@ -186,7 +187,7 @@ public class AutoController {
                         if (j == head.get(i)) {
                             questions[i] = new StringBuffer(text[j]);
                         } else {
-                            if(delete[j] == 0){ //如果该题目没有被删除
+                            if(delete[j] == 0){ //如果该行没有被删除
                                 questions[i].append("\n");
                                 questions[i].append(text[j]);
                             }
